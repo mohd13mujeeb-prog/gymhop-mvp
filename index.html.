@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111411">
+<title>GymHop | Fitness, Your Way</title>
+<style>
+:root{--bg:#111411;--panel:#1b201b;--lime:#c6f36b;--text:#f5f7f2;--muted:#a8b0a4;--line:#303830}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px Arial,sans-serif}
+header{padding:22px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.logo{font-size:25px;font-weight:800;letter-spacing:-1px}.logo span{color:var(--lime)}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:10px;padding:12px 15px;font-weight:700}
+.primary{background:var(--lime);color:#151a12}
+.secondary{background:#2a3228;color:var(--text);border:1px solid var(--line)}
+nav{display:flex;gap:8px;overflow:auto;padding:12px 16px;border-bottom:1px solid var(--line)}
+nav button{white-space:nowrap;background:transparent;color:var(--muted)}
+nav button.active{background:var(--lime);color:#151a12}
+main{max-width:1000px;margin:auto;padding:24px 16px}
+.hero{padding:30px 22px;border-radius:20px;background:linear-gradient(135deg,#283526,#171d16);border:1px solid #374332}
+.eyebrow{color:var(--lime);font-size:12px;font-weight:bold;letter-spacing:2px}
+h1{font-size:clamp(34px,8vw,56px);line-height:1.05;letter-spacing:-2px;margin:14px 0}
+h2{font-size:23px;margin:26px 0 14px}
+p{color:var(--muted);line-height:1.5}
+input,select{width:100%;padding:13px;border:1px solid var(--line);border-radius:10px;background:#171b17;color:var(--text);margin:6px 0 12px}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:17px}
+.gym-icon{font-size:36px;background:#293327;border-radius:12px;padding:12px;display:inline-block}
+.card h3{margin-bottom:5px}.price{font-size:25px;font-weight:bold;margin:15px 0}.price small{font-size:13px;color:var(--muted);font-weight:normal}
+.tag{display:inline-block;color:var(--lime);font-size:12px;background:#283326;border-radius:20px;padding:6px 9px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.hidden{display:none!important}
+.notice{padding:13px;border:1px solid #526341;border-radius:12px;color:var(--lime);margin:12px 0}
+footer{padding:25px 16px;text-align:center;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+@media(min-width:650px){.filters{grid-template-columns:2fr 1fr 1fr}.hero{padding:44px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Gym<span>Hop</span></div>
+  <span class="tag">FITNESS, YOUR WAY</span>
+</header>
+<nav>
+  <button class="active" onclick="showTab('discover',this)">Discover gyms</button>
+  <button onclick="showTab('bookings',this)">My bookings</button>
+  <button onclick="showTab('owner',this)">Gym owner</button>
+</nav>
+
+<main>
+<section id="discover">
+  <div class="hero">
+    <div class="eyebrow">YOUR WORKOUT. YOUR CHOICE.</div>
+    <h1>Great gyms.<br>On your terms.</h1>
+    <p>Discover gyms around you. Book a workout when you want. No long-term membership required.</p>
+    <button class="primary" onclick="document.getElementById('search').focus()">Explore gyms ↓</button>
+  </div>
+
+  <h2>Find your next workout</h2>
+  <div class="filters">
+    <input id="search" placeholder="Search gym or area..." oninput="renderGyms()">
+    <select id="type" onchange="renderGyms()">
+      <option value="">All workout types</option>
+      <option>Strength</option><option>Cardio</option><option>Premium</option>
+    </select>
+    <select id="sort" onchange="renderGyms()">
+      <option value="default">Recommended</option>
+      <option value="price">Price: low to high</option>
+    </select>
+  </div>
+  <div id="gyms" class="grid"></div>
+  <p style="font-size:12px">Demo listings only. These gyms are fictional and are not confirmed partners.</p>
+</section>
+
+<section id="bookings" class="hidden">
+  <h1>My bookings</h1>
+  <p>Your demo reservations on this device.</p>
+  <div id="myBookings"></div>
+</section>
+
+<section id="owner" class="hidden">
+  <div class="eyebrow">GYMHOP FOR GYM OWNERS</div>
+  <h1>Turn spare capacity into opportunity.</h1>
+  <p>List your gym, set your day-pass price, and explore a new way to reach customers.</p>
+  <div class="card">
+    <h2 style="margin-top:0">Register your interest</h2>
+    <form id="ownerForm">
+      <label>Gym name</label><input id="ownerGym" required placeholder="Your gym's name">
+      <label>Owner / manager name</label><input id="ownerName" required placeholder="Your name">
+      <label>Area in Hyderabad</label><input id="ownerArea" required placeholder="e.g. Gachibowli">
+      <label>Proposed day-pass price (₹)</label><input id="ownerPrice" type="number" min="1" required placeholder="e.g. 200">
+      <button class="primary" type="submit">Save demo listing</button>
+    </form>
+    <p style="font-size:12px">Demo only: this form saves on this device. It does not send information to GymHop.</p>
+  </div>
+  <h2>Owner's demo listings</h2>
+  <div id="ownerListings" class="grid"></div>
+</section>
+</main>
+
+<footer>GymHop · More ways to train. More ways to grow.<br>Early prototype · No live bookings or payments</footer>
+
+<script>
+const starterGyms=[
+{id:1,name:"Urban Strength",area:"Gachibowli",type:"Strength",price:199,icon:"🏋️",desc:"Weights and strength training"},
+{id:2,name:"Pulse Fitness",area:"Madhapur",type:"Cardio",price:149,icon:"⚡",desc:"Cardio and functional workouts"},
+{id:3,name:"Elite Training Club",area:"Jubilee Hills",type:"Premium",price:299,icon:"💪",desc:"Premium workout experience"},
+{id:4,name:"Core Fitness Studio",area:"Kondapur",type:"Strength",price:179,icon:"🔥",desc:"Strength and conditioning"}
+];
+const get=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key))||fallback}catch(e){return fallback}};
+const save=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
+let gyms=get("gh_gyms",starterGyms);
+let bookings=get("gh_bookings",[]);
+let ownerListings=get("gh_owners",[]);
+
+function showTab(id,btn){
+ document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+ btn.classList.add("active");
+ if(id==="bookings")renderBookings();
+ if(id==="owner")renderOwners();
+}
+function renderGyms(){
+ let q=document.getElementById("search").value.toLowerCase();
+ let type=document.getElementById("type").value;
+ let list=gyms.filter(g=>(g.name+" "+g.area).toLowerCase().includes(q)&&(!type||g.type===type));
+ if(document.getElementById("sort").value==="price")list.sort((a,b)=>a.price-b.price);
+ document.getElementById("gyms").innerHTML=list.map(g=>`
+ <article class="card">
+ <div class="row"><span class="gym-icon">${g.icon||"🏋️"}</span><span class="tag">${g.type||"Fitness"}</span></div>
+ <h3>${escapeHtml(g.name)}</h3><p>📍 ${escapeHtml(g.area)}</p><p>${escapeHtml(g.desc||"Workout on your schedule")}</p>
+ <div class="price">₹${g.price} <small>/ visit (demo price)</small></div>
+ <button class="primary" onclick="bookGym(${g.id})">Book a workout</button>
+ </article>`).join("")||"<p>No matching gyms. Try another search.</p>";
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function bookGym(id){
+ let g=gyms.find(x=>x.id===id);if(!g)return;
+ let day=prompt("Enter your preferred date (YYYY-MM-DD):",new Date().toISOString().slice(0,10));
+ if(!day)return;
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(day)){alert("Please use YYYY-MM-DD.");return}
+ let time=prompt("Preferred time (e.g. 6:00 PM):","6:00 PM");if(!time)return;
+ bookings.push({id:Date.now(),gym:g.name,area:g.area,price:g.price,date:day,time:time,status:"Demo request"});
+ save("gh_bookings",bookings);
+ alert("Demo request saved on this device. No real booking has been made.");
+}
+function renderBookings(){
+ document.getElementById("myBookings").innerHTML=bookings.map(b=>`
+ <div class="card" style="margin-bottom:12px"><h3>${escapeHtml(b.gym)}</h3>
+ <p>${escapeHtml(b.area)} · ${escapeHtml(b.date)} · ${escapeHtml(b.time)}</p>
+ <div class="row"><span>₹${b.price}</span><span class="tag">${escapeHtml(b.status)}</span></div>
+ <p><button class="secondary" onclick="cancelBooking(${b.id})">Remove demo request</button></p></div>`).join("")||"<p>You have no demo bookings yet. Discover a gym to try the flow.</p>";
+}
+function cancelBooking(id){bookings=bookings.filter(b=>b.id!==id);save("gh_bookings",bookings);renderBookings()}
+document.getElementById("ownerForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ ownerListings.push({id:Date.now(),name:document.getElementById("ownerGym").value,manager:document.getElementById("ownerName").value,area:document.getElementById("ownerArea").value,price:Number(document.getElementById("ownerPrice").value)});
+ save("gh_owners",ownerListings);
+ e.target.reset();renderOwners();
+ alert("Demo listing saved on this device only. It is not publicly listed.");
+});
+function renderOwners(){
+ document.getElementById("ownerListings").innerHTML=ownerListings.map(g=>`
+ <div class="card"><h3>${escapeHtml(g.name)}</h3><p>${escapeHtml(g.manager)} · ${escapeHtml(g.area)}</p>
+ <div class="price">₹${g.price} <small>/ visit</small></div>
+ <button class="secondary" onclick="deleteOwner(${g.id})">Remove listing</button></div>`).join("")||"<p>Your demo listings will appear here.</p>";
+}
+function deleteOwner(id){ownerListings=ownerListings.filter(g=>g.id!==id);save("gh_owners",ownerListings);renderOwners()}
+renderGyms();
+</script>
+</body>
+</html>
